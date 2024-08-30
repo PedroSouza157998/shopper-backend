@@ -5,6 +5,7 @@ import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { saveBase64Image } from "../utils/functions";
 import MeasuresRepository from "../repositories/measure.repository";
+import { ServiceResponse } from "../utils/types";
 
 interface IExecuteProps {
     image: string;
@@ -32,38 +33,40 @@ export default class UploadImagesService {
         measure_type,
         customer_code,
         measure_datetime
-    }: IExecuteProps) {
+    }: IExecuteProps): Promise<ServiceResponse> {
         const media = {
             mimeType: "image/png",
             displayName: "Uploaded Image"
         };
 
         const measure_uuid = uuidv4()
-        if(!new Date(measure_datetime)) {return ({
+        if (!new Date(measure_datetime)) return {
             success: false,
+            code: 400,
             data: {
                 error_code: "INVALID_DATA",
                 error_description: "valor inválido no parâmetro 'measure_datetime'"
             }
-            })
-
         }
+
+
 
         try {
 
             const filePath = saveBase64Image(image, measure_uuid)
 
-            if (await this.ormRepository.findMonth({datetime: measure_datetime, type: measure_type})) {
+            if (await this.ormRepository.findMonth({ datetime: measure_datetime, type: measure_type })) {
                 return {
                     success: false,
+                    code: 409,
                     data: {
                         error_code: "DOUBLE_REPORT",
                         error_description: "Leitura do mês já realizada"
-                        
+
                     }
                 }
             }
-            
+
             const fileResult = await this.fileManager.uploadFile(filePath, media)
             const textResult = await this.textGenerate.generateContent([
                 {
@@ -90,6 +93,7 @@ export default class UploadImagesService {
             })
             return {
                 success: true,
+                code: 200,
                 data: {
                     image_url: fileResult.file.uri,
                     measure_value,
@@ -97,7 +101,7 @@ export default class UploadImagesService {
                 }
             }
         } catch (error) {
-           throw new Error("Houve um problema imprevisto no upload de imagens!")
+            throw new Error("Houve um problema imprevisto no upload de imagens!")
         }
         // let body = { file: { displayName: "Uploaded Image" } };
 

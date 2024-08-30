@@ -23,8 +23,8 @@ export default class UploadController {
                 customer_code,
                 measure_datetime
             })
-            
-            response.json(result.data)
+
+            response.status(result.code).json(result.data)
         } catch (error) {
             response.json({
                 error_code: "INTERNAL_SERVER_ERROR",

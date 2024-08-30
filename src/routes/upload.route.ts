@@ -8,9 +8,9 @@ const uploadController = new UploadController()
 router.post('/', 
     celebrate({
     [Segments.BODY]: {
-        "image": Joi.string().required(),
+        "image": Joi.string().base64().required(),
         "customer_code": Joi.string().required(),
-        "measure_type": Joi.string().allow("WATER", "GAS").required(),
+        "measure_type": Joi.string().valid("WATER", "GAS").required(),
         "measure_datetime": Joi.string().required()
     }
 }),
