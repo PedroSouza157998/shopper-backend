@@ -53,8 +53,7 @@ export default class UploadImagesService {
 
         try {
 
-            const filePath = saveBase64Image(image, measure_uuid)
-
+            
             if (await this.ormRepository.findMonth({ datetime: measure_datetime, type: measure_type })) {
                 return {
                     success: false,
@@ -62,10 +61,12 @@ export default class UploadImagesService {
                     data: {
                         error_code: "DOUBLE_REPORT",
                         error_description: "Leitura do mês já realizada"
-
+                        
                     }
                 }
             }
+            
+            const filePath = saveBase64Image(image, measure_uuid)
 
             const fileResult = await this.fileManager.uploadFile(filePath, media)
             const textResult = await this.textGenerate.generateContent([

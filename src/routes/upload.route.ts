@@ -1,11 +1,11 @@
 import { Router } from "express"
-import UploadController from "../controllers/uploadController"
+import MeasureController from "../controllers/measureController"
 import { celebrate, Joi, Segments } from "celebrate"
 
 const router = Router()
-const uploadController = new UploadController()
+const measureController = new MeasureController()
 
-router.post('/', 
+router.post('/upload', 
     celebrate({
     [Segments.BODY]: {
         "image": Joi.string().base64().required(),
@@ -14,6 +14,6 @@ router.post('/',
         "measure_datetime": Joi.string().required()
     }
 }),
-uploadController.upload)
+measureController.upload)
 
 export default router

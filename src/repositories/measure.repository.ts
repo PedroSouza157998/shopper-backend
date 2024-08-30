@@ -39,7 +39,8 @@ class MeasuresRepository {
             measure_datetime: data.measure_datetime,
             measure_type: data.measure_type,
             measure_uuid: data.measure_uuid,
-            measure_value: data.measure_value
+            measure_value: data.measure_value,
+            customer_code: data.customer_code
         })
 
         return measure;
@@ -54,10 +55,21 @@ class MeasuresRepository {
     }): Promise<UpdateWriteOpResult> {
 
         return await this.ormRepository.updateOne({measure_uuid}, { $set: { measure_value, has_confirmed: true }})
-        // return await measure.save();
+        
     }
-    public async delete(id: string): Promise<void> {
-        await this.ormRepository.deleteOne({ _id: id });
+    public async findAll(filter: {
+        customer_code: string;
+        measure_type?: string;
+    }): Promise<IMeasureSchema[]> {
+        const res = await this.ormRepository.find(filter, {
+            measure_uuid: 1,
+            measure_datetime: 1,
+            measure_type: 1,
+            has_confirmed: 1,
+            image_url: 1,
+            _id: 0
+        });
+        return res || []
     }
 }
 

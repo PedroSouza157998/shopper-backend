@@ -8,16 +8,19 @@ import 'dotenv/config'
 
 import uploadRouter from './routes/upload.route'
 import confirmRouter from './routes/confirm.route'
+import listRouter from './routes/list.route'
+listRouter
 const app = express()
 const port = 3000
 
 app.use(cors())
 app.use(bodyParser.json({ limit: '50mb' }))
 
-app.use('/upload', uploadRouter)
-app.use('/confirm', confirmRouter)
+app.use('/', uploadRouter)
+app.use('/', confirmRouter)
+app.use('/', listRouter)
 
-app.get('/', (req: Request, res: Response) => res.send('Server OK!'))
+// app.get('/', (req: Request, res: Response) => res.send('Server OK!'))
 
 app.use((err: CelebrateError, req: Request, res: Response, next: NextFunction) => {
   if (isCelebrateError(err)) {

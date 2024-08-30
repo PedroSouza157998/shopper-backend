@@ -1,5 +1,5 @@
 import { Schema, Model, HydratedDocument, connect, model } from 'mongoose';
-import { injectable, inject } from 'tsyringe';
+import { injectable } from 'tsyringe';
 
 export interface IMeasureSchema {
     measure_uuid: string,
@@ -7,7 +7,8 @@ export interface IMeasureSchema {
     measure_type: string,
     measure_value: number,
     has_confirmed:boolean,
-    image_url: string
+    image_url: string,
+    customer_code: string
 }
 
 const Measure = new Schema<IMeasureSchema>(
@@ -18,8 +19,10 @@ const Measure = new Schema<IMeasureSchema>(
     measure_value: { type: Number, required: true },
     has_confirmed: { type: Boolean, required: true },
     image_url: { type: String, required: true },
+    customer_code: { type: String, required: true },
   },
   {
+    id: false,
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },

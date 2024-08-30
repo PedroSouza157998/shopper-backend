@@ -1,10 +1,10 @@
 import { Request, Response } from "express"
 import {container} from "tsyringe";
-import UploadImagesService from "../services/uploadImageService";
+import ListImagesService from "../services/uploadImageService";
 
 
-export default class UploadController {
-    async upload(request: Request, response: Response) {
+export default class ListController {
+    async list(request: Request, response: Response) {
         
         const {
             image,
@@ -14,7 +14,7 @@ export default class UploadController {
         } = request.body
 
         
-        const uploadImagesService = container.resolve(UploadImagesService)
+        const uploadImagesService = container.resolve(ListImagesService)
         
         try {
             const result = await uploadImagesService.execute({

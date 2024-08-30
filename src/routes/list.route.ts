@@ -5,13 +5,12 @@ import { celebrate, Joi, Segments } from "celebrate"
 const router = Router()
 const measureController = new MeasureController()
 
-router.patch('/confirm', 
+router.get('/:customer_code/list',
     celebrate({
-    [Segments.BODY]: {
-        "measure_uuid": Joi.string().required(),
-        "measure_value": Joi.number().required()
-    }
-}),
-measureController.confirm)
+        [Segments.PARAMS]: {
+            customer_code: Joi.string().required(),
+        }
+    }),
+    measureController.list)
 
 export default router
