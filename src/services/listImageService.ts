@@ -22,7 +22,7 @@ export default class ListImagesService {
 
         try {
 
-            if(measure_type && (typeof measure_type !== 'string' || !["GAS", "WATER"].includes(measure_type?.toUpperCase()))) {
+            if (measure_type && (typeof measure_type !== 'string' || !["GAS", "WATER"].includes(measure_type?.toUpperCase()))) {
                 return {
                     success: false,
                     code: 400,
@@ -33,8 +33,7 @@ export default class ListImagesService {
                 }
             }
 
-            const measures = await this.ormRepository.findAll(measure_type ? { customer_code, measure_type } : { customer_code } )
-            console.log(measures)
+            const measures = await this.ormRepository.findAll(measure_type ? { customer_code, measure_type } : { customer_code })
             if (measures.length)
                 return {
                     success: true,
@@ -44,7 +43,7 @@ export default class ListImagesService {
                         measures
                     }
                 }
-            else 
+            else
                 return {
                     success: false,
                     code: 404,
@@ -53,35 +52,6 @@ export default class ListImagesService {
                         error_description: "Nenhuma leitura encontrada"
                     }
                 }
-            // if(!measure) {
-            //     return {
-            //         success: false,
-            //         code: 404,
-            //         data: {
-            //             error_code: "MEASURE_NOT_FOUND",
-            //             error_description: "Leitura do mês já realizada"
-            //         }
-            //     }
-            // } else {
-            //     if(measure.has_confirmed) {
-            //         return {
-            //             success: false,
-            //             code: 409,
-            //             data: {
-            //                 error_code: "CONFIRMATION_DUPLICATE",
-            //                 error_description: "Leitura do mês já realizada"
-            //             }
-            //         }
-            //     }
-            // }
-            // await this.ormRepository.update({measure_uuid, measure_value})
-            // return {
-            //     success: true,
-            //     code: 200,
-            //     data: {
-            //         success: true
-            //     }
-            // }
         } catch (error) {
             throw new Error("Houve um problema imprevisto no upload de imagens!")
         }

@@ -1,11 +1,11 @@
-import { google } from "googleapis";
-import { inject, injectable } from "tsyringe";
+import { injectable } from "tsyringe";
 import { v4 as uuidv4 } from 'uuid';
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { saveBase64Image } from "../utils/functions";
 import MeasuresRepository from "../repositories/measure.repository";
 import { ServiceResponse } from "../utils/types";
+import path from "path";
 
 interface IExecuteProps {
     image: string;
@@ -49,11 +49,17 @@ export default class UploadImagesService {
             }
         }
 
-
+        var base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+        if(!base64regex.test(image)) return {
+            success: false,
+            code: 400,
+            data: {
+                error_code: "INVALID_DATA",
+                error_description: "valor inválido no parâmetro 'image'"
+            }
+        }
 
         try {
-
-            
             if (await this.ormRepository.findMonth({ datetime: measure_datetime, type: measure_type })) {
                 return {
                     success: false,
@@ -87,7 +93,7 @@ export default class UploadImagesService {
             await this.ormRepository.create({
                 customer_code,
                 measure_type,
-                image_url: fileResult.file.uri,
+                image_url: path.join(process.env.API_URL as string, 'uploads', measure_uuid),
                 measure_value,
                 measure_datetime,
                 measure_uuid
@@ -96,7 +102,7 @@ export default class UploadImagesService {
                 success: true,
                 code: 200,
                 data: {
-                    image_url: fileResult.file.uri,
+                    image_url: path.join(process.env.API_URL as string, 'uploads', measure_uuid),
                     measure_value,
                     measure_uuid
                 }

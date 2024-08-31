@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { CelebrateError, errors, isCelebrateError } from 'celebrate';
+import { CelebrateError, isCelebrateError } from 'celebrate';
 import bodyParser from 'body-parser';
+import path from 'path';
 import cors from 'cors';
 
 import 'reflect-metadata'
@@ -9,6 +10,8 @@ import 'dotenv/config'
 import uploadRouter from './routes/upload.route'
 import confirmRouter from './routes/confirm.route'
 import listRouter from './routes/list.route'
+
+
 listRouter
 const app = express()
 const port = 3000
@@ -20,7 +23,7 @@ app.use('/', uploadRouter)
 app.use('/', confirmRouter)
 app.use('/', listRouter)
 
-// app.get('/', (req: Request, res: Response) => res.send('Server OK!'))
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 app.use((err: CelebrateError, req: Request, res: Response, next: NextFunction) => {
   if (isCelebrateError(err)) {
