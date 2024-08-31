@@ -1,0 +1,25 @@
+version: '1.0'
+
+services: 
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-wallet-volume:/data/db
+  api:
+    container_name: shopper-api
+    build: .
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/shopper
+    links:
+      - mongo
+    env_file:
+      - ./.env
+volumes:
+  mongodb-wallet-volume:

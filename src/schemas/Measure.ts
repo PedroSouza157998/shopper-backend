@@ -34,7 +34,7 @@ class MeasureModel {
   public measureModel: Model<IMeasureSchema>;
 
   constructor() {
-    connect('mongodb://127.0.0.1:27017/test')
+    connect(process.env.MONGO_URI as string)
     this.measureModel = model<IMeasureSchema>('Measure', Measure);
   }
 }
