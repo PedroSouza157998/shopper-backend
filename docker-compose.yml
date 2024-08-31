@@ -17,6 +17,7 @@ services:
       - mongo
     environment:
       - MONGO_URI=mongodb://mongo:27017/shopper
+      - API_URL=http://localhost:3000
     links:
       - mongo
     env_file:
